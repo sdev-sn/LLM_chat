@@ -12,7 +12,7 @@ from langchain_anthropic import ChatAnthropic
 from langchain.schema import HumanMessage, AIMessage
 from ragatouille import RAGPretrainedModel
 
-RAG = RAGPretrainedModel.from_pretrained("colbert-ir/colbertv2.0")
+#RAG = RAGPretrainedModel.from_pretrained("colbert-ir/colbertv2.0")
 
 from rag_methods import (
     load_doc_to_db, 
