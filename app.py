@@ -10,7 +10,7 @@ import pandas as pd
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 from langchain.schema import HumanMessage, AIMessage
-from ragatouille import RAGPretrainedModel
+#from ragatouille import RAGPretrainedModel
 
 #RAG = RAGPretrainedModel.from_pretrained("colbert-ir/colbertv2.0")
 
