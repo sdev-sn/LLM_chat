@@ -26,4 +26,5 @@ from rag_methods import (
 dotenv.load_dotenv()
 
 df = pd.read_excel("reddit_data_comments_feb22.xlsx")
+st.dataframe(df.head())
 st.write("success")
