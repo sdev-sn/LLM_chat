@@ -42,10 +42,11 @@ st.dataframe(df.head())
 #st.write("success")
 # Create a list of documents from your dataframe
 documents = []
-for index, row in df.iterrows():
+for i, row in df.iterrows():
 # Assuming each row is a document
-  document_text = row.to_string()
+  document_text = row [1]
   documents.append(document_text)
+documents[:2]
 
 # Split documents into chunks
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=2500, chunk_overlap=250)
