@@ -22,5 +22,5 @@ langchain-chroma
 #chromadb
 tiktoken
 openpyxl
-faiss
+faiss-cpu
 
