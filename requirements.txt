@@ -14,7 +14,8 @@ streamlit
 langchain
 openai
 pysqlite3-binary # for chromadb 
-chromadb==0.6.1
+langchain-chroma
+#chromadb==0.6.1
 #chromadb
 tiktoken
 
