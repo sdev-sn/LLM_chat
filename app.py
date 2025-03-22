@@ -46,7 +46,7 @@ for i, row in df.iterrows():
 # Assuming each row is a document
   document_text = row [1]
   documents.append(document_text)
-documents[:2]
+return documents
 
 # Split documents into chunks
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=2500, chunk_overlap=250)
