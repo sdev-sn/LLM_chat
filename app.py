@@ -64,7 +64,8 @@ db = FAISS.from_documents(documents=texts, embedding=embeddings)
 
 # Create retriever interface
 retriever = db.as_retriever()
-llm=OpenAI(openai_api_key=st.secrets["OPENAI_API_KEY"], model_name="gpt-4o-mini",temperature=0)
+#llm=OpenAI(openai_api_key=st.secrets["OPENAI_API_KEY"], model_name="gpt-4o-mini",temperature=0)
+llm=OpenAI(openai_api_key=st.secrets["OPENAI_API_KEY"],temperature=0)
 # Create QA chain
 
 def generate_response(user_query):
