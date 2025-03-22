@@ -95,7 +95,7 @@ query_text = st.text_input('Question ', placeholder='Please provide your questio
  ##           messages=[
  ##               {"role": m["role"], "content": m["content"]}
   ##              for m in st.session_state.messages
-            ],
+##            ],
   ##          stream=True,
    ##     )
   ##      response = st.write_stream(stream)
