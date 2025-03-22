@@ -71,7 +71,7 @@ print("✅ Data successfully stored in ChromaDB!")
 
 # Reload the vector store for retrieval
 vectorstore = Chroma(persist_directory=persist_directory, embedding_function=embeddings)
-print("🔄 ChromaDB reloaded successfully!")
+st.write('🔄 ChromaDB reloaded successfully!')
 
 ##db = FAISS.from_documents(documents=texts, embedding=embeddings)
 
