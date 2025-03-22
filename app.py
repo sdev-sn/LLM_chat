@@ -64,7 +64,7 @@ db = FAISS.from_documents(documents=texts, embedding=embeddings)
 # Create retriever interface
 retriever = db.as_retriever()
 OPENAI_API_KEY=st.secrets["OPENAI_API_KEY"]
-llm=OpenAI(openai_api_key=OPENAI_API_KEY,temperature=0,model_name="gpt-4")
+llm=ChatOpenAI(openai_api_key=OPENAI_API_KEY,temperature=0,model_name="gpt-4")
 #llm=OpenAI(openai_api_key=st.secrets["OPENAI_API_KEY"],temperature=0)
 # Create QA chain
 
