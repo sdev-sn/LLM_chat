@@ -18,6 +18,9 @@ from openai import OpenAI
 from langchain_openai import OpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
+from chromadb.config import Settings
+from chromadb import Client
+import tiktoken
 from langchain_community.vectorstores import Chroma
 from langchain.chains import RetrievalQA
 
