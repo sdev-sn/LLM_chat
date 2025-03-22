@@ -56,13 +56,16 @@ db = Chroma.from_documents(texts, embeddings)
 retriever = db.as_retriever()
 
 # Create QA chain
-  qa = RetrievalQA.from_chain_type(llm=OpenAI(api_key=st.secrets["OPENAI_API_KEY"]), chain_type='stuff', retriever=retriever)
-return qa.run(query_text)
-
+qa = RetrievalQA.from_chain_type(llm=OpenAI(api_key=st.secrets["OPENAI_API_KEY"]), model_name="gpt-4o-mini",temperature=0,chain_type='stuff', retriever=retriever)
+ 
 st.title("ChatGPT-like clone")
 # Setup the input textfield to take questions from user
-query_text = st.text_input('Question ', placeholder='Please provide your question here.')
+#query_text = st.text_input('Question ', placeholder='Please provide your question here.')
+user_query = st.text_input("Ask a question about your Excel data:")
 
+if user_query:
+    response = qa.run(user_query)
+    st.write(response)
 
 # Set OpenAI API key from Streamlit secrets
 ##client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
