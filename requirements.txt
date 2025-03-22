@@ -13,6 +13,7 @@
 streamlit
 langchain
 openai
+pysqlite3-binary # for chromadb 
 chromadb
 tiktoken
-pysqlite3-binary # for chromadb 
+
