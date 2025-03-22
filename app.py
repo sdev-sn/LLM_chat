@@ -64,11 +64,11 @@ db = FAISS.from_documents(documents=texts, embedding=embeddings)
 
 # Create retriever interface
 retriever = db.as_retriever()
-
+llm=OpenAI(openai_api_key=st.secrets["OPENAI_API_KEY"], model_name="gpt-4o-mini",temperature=0)
 # Create QA chain
 
 def generate_response(user_query):
-  qa = RetrievalQA.from_chain_type(llm=OpenAI(api_key=st.secrets["OPENAI_API_KEY"]), model_name="gpt-4o-mini",temperature=0,chain_type='stuff', retriever=retriever)
+  qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever)
   return qa.run(user_query)
   
 st.title("ChatGPT-like clone")
