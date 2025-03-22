@@ -22,6 +22,7 @@ from chromadb.config import Settings
 from chromadb import Client
 import tiktoken
 from langchain_community.vectorstores import Chroma
+from langchain.vectorstores.faiss import FAISS
 from langchain.chains import RetrievalQA
 
 #from langchain_openai import ChatOpenAI
@@ -58,7 +59,8 @@ texts = text_splitter.create_documents(documents)
 embeddings = OpenAIEmbeddings()
 
 # Create a vector store from documents
-db = Chroma.from_documents(texts, embeddings)
+#db = Chroma.from_documents(texts, embeddings)
+db = FAISS.from_documents(documents=texts, embedding=embeddings)
 
 # Create retriever interface
 retriever = db.as_retriever()
