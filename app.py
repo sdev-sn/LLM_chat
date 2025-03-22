@@ -25,11 +25,7 @@ from langchain_community.vectorstores import Chroma
 from langchain.vectorstores.faiss import FAISS
 from langchain.chains import RetrievalQA
 
-#from langchain_openai import ChatOpenAI
-#from langchain_anthropic import ChatAnthropic
-#from langchain.schema import HumanMessage, AIMessage
 #from ragatouille import RAGPretrainedModel
-
 #RAG = RAGPretrainedModel.from_pretrained("colbert-ir/colbertv2.0")
 
 #from rag_methods import (
@@ -60,10 +56,29 @@ embeddings = OpenAIEmbeddings()
 
 # Create a vector store from documents
 #db = Chroma.from_documents(texts, embeddings)
-db = FAISS.from_documents(documents=texts, embedding=embeddings)
+# Set directory for persistent storage
+persist_directory = "./chroma_db"
+# Store documents in ChromaDB
+vectorstore = Chroma.from_documents(
+    documents=texts, 
+    embedding=embeddings,
+    persist_directory=persist_directory
+)
+
+# Persist the database to disk
+vectorstore.persist()  
+print("✅ Data successfully stored in ChromaDB!")
+
+# Reload the vector store for retrieval
+vectorstore = Chroma(persist_directory=persist_directory, embedding_function=embeddings)
+print("🔄 ChromaDB reloaded successfully!")
+
+##db = FAISS.from_documents(documents=texts, embedding=embeddings)
 
 # Create retriever interface
-retriever = db.as_retriever()
+##retriever = db.as_retriever()
+retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k":5})
+
 OPENAI_API_KEY=st.secrets["OPENAI_API_KEY"]
 llm=ChatOpenAI(openai_api_key=OPENAI_API_KEY,temperature=0,model_name="gpt-4")
 #llm=OpenAI(openai_api_key=st.secrets["OPENAI_API_KEY"],temperature=0)
