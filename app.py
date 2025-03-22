@@ -67,17 +67,17 @@ retriever = db.as_retriever()
 
 # Create QA chain
 
-def generate_response(query_text):
+def generate_response(user_query):
   qa = RetrievalQA.from_chain_type(llm=OpenAI(api_key=st.secrets["OPENAI_API_KEY"]), model_name="gpt-4o-mini",temperature=0,chain_type='stuff', retriever=retriever)
-  return qa.run(query_text)
+  return qa.run(user_query)
   
 st.title("ChatGPT-like clone")
 # Setup the input textfield to take questions from user
 #query_text = st.text_input('Question ', placeholder='Please provide your question here.')
-query_text = st.text_input("Ask a question :")
+user_query = st.text_input("Ask a question :")
 
 if user_query:
-    response = generate_response(query_text)
+    response = generate_response(user_query)
     st.write(response)
 
 # Set OpenAI API key from Streamlit secrets
