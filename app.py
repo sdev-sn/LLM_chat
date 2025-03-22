@@ -53,10 +53,10 @@ embeddings = OpenAIEmbeddings()
 db = Chroma.from_documents(texts, embeddings)
 
 # Create retriever interface
-retriever = db.as_retriever()
+  retriever = db.as_retriever()
 
 # Create QA chain
-qa = RetrievalQA.from_chain_type(llm=OpenAI(api_key=st.secrets["OPENAI_API_KEY"]), chain_type='stuff', retriever=retriever)
+  qa = RetrievalQA.from_chain_type(llm=OpenAI(api_key=st.secrets["OPENAI_API_KEY"]), chain_type='stuff', retriever=retriever)
 return qa.run(query_text)
 
 st.title("ChatGPT-like clone")
