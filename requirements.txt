@@ -18,4 +18,5 @@ langchain-chroma
 #chromadb==0.6.1
 #chromadb
 tiktoken
+openpyxl
 
