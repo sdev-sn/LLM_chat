@@ -12,6 +12,9 @@
 
 streamlit
 langchain
+langchain-openai
+langchain-community
+langchain-text-splitters
 openai
 pysqlite3-binary # for chromadb 
 langchain-chroma
