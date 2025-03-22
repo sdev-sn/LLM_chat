@@ -15,6 +15,7 @@ import openpyxl
 
 from openai import OpenAI
 from langchain_openai import OpenAI
+from langchain_openai import ChatOpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from chromadb.config import Settings
