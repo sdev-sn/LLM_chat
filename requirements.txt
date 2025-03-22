@@ -22,4 +22,5 @@ langchain-chroma
 #chromadb
 tiktoken
 openpyxl
+faiss
 
