@@ -57,6 +57,7 @@ embeddings = OpenAIEmbeddings()
 
 # Create a vector store from documents
 #db = Chroma.from_documents(texts, embeddings)
+
 # Set directory for persistent storage
 persist_directory = "./chroma_db"
 # Store documents in ChromaDB
@@ -67,12 +68,12 @@ vectorstore = Chroma.from_documents(
 )
 
 # Persist the database to disk
-vectorstore.persist()  
-print("✅ Data successfully stored in ChromaDB!")
+#vectorstore.persist()  
+#print("✅ Data successfully stored in ChromaDB!")
 
 # Reload the vector store for retrieval
-vectorstore = Chroma(persist_directory=persist_directory, embedding_function=embeddings)
-st.write('🔄 ChromaDB reloaded successfully!')
+#vectorstore = Chroma(persist_directory=persist_directory, embedding_function=embeddings)
+#st.write('🔄 ChromaDB reloaded successfully!')
 
 ##db = FAISS.from_documents(documents=texts, embedding=embeddings)
 
@@ -81,12 +82,12 @@ st.write('🔄 ChromaDB reloaded successfully!')
 retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k":5})
 
 OPENAI_API_KEY=st.secrets["OPENAI_API_KEY"]
-llm=ChatOpenAI(openai_api_key=OPENAI_API_KEY,temperature=0,model_name="gpt-4")
+llm=ChatOpenAI(openai_api_key=OPENAI_API_KEY,temperature=0,model_name="gpt-4o-mini")
 #llm=OpenAI(openai_api_key=st.secrets["OPENAI_API_KEY"],temperature=0)
 # Create QA chain
 
 def generate_response(user_query):
-  qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever)
+  qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever, return_source_documents=True)
   return qa.run(user_query)
   
 st.title("ChatGPT-like clone")
