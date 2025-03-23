@@ -19,7 +19,7 @@ openai
 pysqlite3-binary # for chromadb 
 langchain-chroma
 #chromadb==0.6.1
-#chromadb
+chromadb
 tiktoken
 openpyxl
 faiss-cpu
