@@ -87,7 +87,7 @@ llm=ChatOpenAI(openai_api_key=OPENAI_API_KEY,temperature=0,model_name="gpt-4o-mi
 # Create QA chain
 
 def generate_response(user_query):
-  qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever, return_source_documents=True)
+  qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever)
   return qa.run(user_query)
   
 st.title("ChatGPT-like clone")
