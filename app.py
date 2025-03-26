@@ -49,7 +49,8 @@ for i, row in df.iterrows():
 # return documents
 
 # Split documents into chunks
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=2500, chunk_overlap=250)
+#text_splitter = RecursiveCharacterTextSplitter(chunk_size=2500, chunk_overlap=250)
+text_splitter = RecursiveCharacterTextSplitter()
 texts = text_splitter.create_documents(documents)
 
 # Select embeddings
