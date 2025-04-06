@@ -58,8 +58,8 @@ for i, row in df_data.iterrows():
 # return documents
 
 # Split documents into chunks
-#text_splitter = RecursiveCharacterTextSplitter(chunk_size=2500, chunk_overlap=250)
-text_splitter = RecursiveCharacterTextSplitter()
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=5000, chunk_overlap=250)
+#text_splitter = RecursiveCharacterTextSplitter()
 texts = text_splitter.create_documents(documents)
 
 # Select embeddings
@@ -86,16 +86,21 @@ vectorstore = Chroma.from_documents(
 
 # Create retriever interface
 ##retriever = db.as_retriever()
-retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k":5})
+##retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k":5})
+retriever = vectorstore.as_retriever()
 
 OPENAI_API_KEY=st.secrets["OPENAI_API_KEY"]
 llm=ChatOpenAI(openai_api_key=OPENAI_API_KEY,temperature=0,model_name="gpt-4o-mini")
 #llm=OpenAI(openai_api_key=st.secrets["OPENAI_API_KEY"],temperature=0)
 # Create QA chain
 
-def generate_response(user_query):
-  qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever)
-  return qa.run(user_query)
+qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever,return_source_documents=True)
+
+def generate_response(query):
+  result = qa({"query": query})
+  return result['result']
+#  qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever,return_source_documents=True)
+#  return qa.run(user_query)
   
 st.title("ChatGPT-like clone")
 # Setup the input textfield to take questions from user
