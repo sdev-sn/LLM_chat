@@ -37,12 +37,20 @@ from langchain.chains import RetrievalQA
 
 dotenv.load_dotenv()
 
-df = pd.read_excel("reddit_data_comments_feb22.xlsx")
-st.dataframe(df.head())
+#df = pd.read_excel("reddit_data_comments_feb22.xlsx")
+df = pd.read_excel("reddit_data2.xlsx")
+df_data = df[['title','subreddit', 'selftext']]
+st.dataframe(df_data.head())
+
+# Convert relevant columns to string type
+for col in ['title','subreddit', 'selftext']:
+    if col in df_data.columns:
+        df_data[col] = df_data[col].astype(str)
+
 #st.write("success")
 # Create a list of documents from your dataframe
 documents = []
-for i, row in df.iterrows():
+for i, row in df_data.iterrows():
 # Assuming each row is a document
   document_text = row [1]
   documents.append(document_text)
@@ -55,9 +63,6 @@ texts = text_splitter.create_documents(documents)
 
 # Select embeddings
 embeddings = OpenAIEmbeddings()
-
-# Create a vector store from documents
-#db = Chroma.from_documents(texts, embeddings)
 
 # Set directory for persistent storage
 persist_directory = "./chroma_db"
