@@ -1,3 +1,4 @@
+#Ref python file - Test_chromadb
 #import streamlit as st
 #st.write('Hello world!')
 
@@ -52,7 +53,7 @@ for col in ['title','subreddit', 'selftext']:
 documents = []
 for i, row in df_data.iterrows():
 # Assuming each row is a document
-  document_text = row [1]
+  document_text = row [2]
   documents.append(document_text)
 # return documents
 
