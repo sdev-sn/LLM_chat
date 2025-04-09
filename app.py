@@ -83,10 +83,11 @@ prompt = ChatPromptTemplate.from_template(
 Question: {input}"""
 )
 
+
+llm=ChatOpenAI(openai_api_key=OPENAI_API_KEY,temperature=0,model_name="gpt-4o-mini")
 document_chain = create_stuff_documents_chain(llm, prompt)
 retrieval_chain = create_retrieval_chain(retriever, document_chain)
 
-llm=ChatOpenAI(openai_api_key=OPENAI_API_KEY,temperature=0,model_name="gpt-4o-mini")
 
 # Create QA chain
 #qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever,return_source_documents=True)
