@@ -49,7 +49,7 @@ for i, row in df_data.iterrows():
 # Split documents into chunks
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=5000, chunk_overlap=250)
 texts = text_splitter.create_documents(documents)
-st.write(tesxts)
+st.write(texts)
 
 # Select embeddings
 embeddings = OpenAIEmbeddings()
