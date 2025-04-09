@@ -94,11 +94,11 @@ llm=ChatOpenAI(openai_api_key=OPENAI_API_KEY,temperature=0,model_name="gpt-4o-mi
 #llm=OpenAI(openai_api_key=st.secrets["OPENAI_API_KEY"],temperature=0)
 # Create QA chain
 
-qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever,return_source_documents=True)
+#qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever,return_source_documents=True)
 
-def generate_response(query):
-  result = qa({"query": query})
-  return result['result']
+##def generate_response(query):
+#  result = qa({"query": query})
+#  return result['result']
 #  qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever,return_source_documents=True)
 #  return qa.run(user_query)
   
@@ -108,7 +108,8 @@ st.title("ChatGPT-like clone")
 user_query = st.text_input("Ask a question :")
 
 if user_query:
-    response = generate_response(user_query)
+    qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever,return_source_documents=True)
+    response = qa.run(user_query)
     st.write(response)
 
 # Set OpenAI API key from Streamlit secrets
