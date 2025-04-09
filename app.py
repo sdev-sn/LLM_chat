@@ -26,19 +26,8 @@ from langchain_community.vectorstores import Chroma
 from langchain.vectorstores.faiss import FAISS
 from langchain.chains import RetrievalQA
 
-#from ragatouille import RAGPretrainedModel
-#RAG = RAGPretrainedModel.from_pretrained("colbert-ir/colbertv2.0")
-
-#from rag_methods import (
-#    load_doc_to_db, 
-#    load_url_to_db,
-#    stream_llm_response,
-#    stream_llm_rag_response,
-#)
-
 dotenv.load_dotenv()
 
-#df = pd.read_excel("reddit_data_comments_feb22.xlsx")
 df = pd.read_excel("reddit_data2.xlsx")
 df_data = df[['title','subreddit', 'selftext']]
 st.dataframe(df_data.head())
@@ -59,8 +48,8 @@ for i, row in df_data.iterrows():
 
 # Split documents into chunks
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=5000, chunk_overlap=250)
-#text_splitter = RecursiveCharacterTextSplitter()
 texts = text_splitter.create_documents(documents)
+st.write(tesxts)
 
 # Select embeddings
 embeddings = OpenAIEmbeddings()
@@ -74,16 +63,6 @@ vectorstore = Chroma.from_documents(
     persist_directory=persist_directory
 )
 
-# Persist the database to disk
-#vectorstore.persist()  
-#print("✅ Data successfully stored in ChromaDB!")
-
-# Reload the vector store for retrieval
-#vectorstore = Chroma(persist_directory=persist_directory, embedding_function=embeddings)
-#st.write('🔄 ChromaDB reloaded successfully!')
-
-##db = FAISS.from_documents(documents=texts, embedding=embeddings)
-
 # Create retriever interface
 ##retriever = db.as_retriever()
 ##retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k":5})
@@ -91,9 +70,8 @@ retriever = vectorstore.as_retriever()
 
 OPENAI_API_KEY=st.secrets["OPENAI_API_KEY"]
 llm=ChatOpenAI(openai_api_key=OPENAI_API_KEY,temperature=0,model_name="gpt-4o-mini")
-#llm=OpenAI(openai_api_key=st.secrets["OPENAI_API_KEY"],temperature=0)
-# Create QA chain
 
+# Create QA chain
 #qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever,return_source_documents=True)
 
 ##def generate_response(query):
@@ -103,48 +81,9 @@ llm=ChatOpenAI(openai_api_key=OPENAI_API_KEY,temperature=0,model_name="gpt-4o-mi
 #  return qa.run(user_query)
   
 st.title("ChatGPT-like clone")
-# Setup the input textfield to take questions from user
-#query_text = st.text_input('Question ', placeholder='Please provide your question here.')
 user_query = st.text_input("Ask a question :")
 
 if user_query:
     qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever,return_source_documents=True)
     response = qa(user_query)
     st.write(response)
-
-# Set OpenAI API key from Streamlit secrets
-##client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
-
-# Set a default model
-##if "openai_model" not in st.session_state:
-##    st.session_state["openai_model"] = "gpt-4o-mini"
-
-# Initialize chat history
-##if "messages" not in st.session_state:
-##    st.session_state.messages = []
-
-# Display chat messages from history on app rerun
-##for message in st.session_state.messages:
-##    with st.chat_message(message["role"]):
-##        st.markdown(message["content"])
-
-# Accept user input
-##if prompt := st.chat_input("What is up?"):
-    # Add user message to chat history
-##    st.session_state.messages.append({"role": "user", "content": prompt})
-    # Display user message in chat message container
-##    with st.chat_message("user"):
- ##       st.markdown(prompt)
-
-# Display assistant response in chat message container
- ##   with st.chat_message("assistant"):
-##        stream = client.chat.completions.create(
- ##           model=st.session_state["openai_model"],
- ##           messages=[
- ##               {"role": m["role"], "content": m["content"]}
-  ##              for m in st.session_state.messages
-##            ],
-  ##          stream=True,
-   ##     )
-  ##      response = st.write_stream(stream)
-##    st.session_state.messages.append({"role": "assistant", "content": response})
