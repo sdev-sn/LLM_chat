@@ -109,7 +109,7 @@ user_query = st.text_input("Ask a question :")
 
 if user_query:
     qa = RetrievalQA.from_chain_type(llm=llm,chain_type="stuff", retriever=retriever,return_source_documents=True)
-    response = qa.run(user_query)
+    response = qa(user_query)
     st.write(response)
 
 # Set OpenAI API key from Streamlit secrets
