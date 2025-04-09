@@ -25,6 +25,9 @@ import tiktoken
 from langchain_community.vectorstores import Chroma
 from langchain.vectorstores.faiss import FAISS
 from langchain.chains import RetrievalQA
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_core.prompts import ChatPromptTemplate
+from langchain.chains import create_retrieval_chain
 
 dotenv.load_dotenv()
 
@@ -68,7 +71,21 @@ vectorstore = Chroma.from_documents(
 ##retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k":5})
 retriever = vectorstore.as_retriever()
 
+##Model
 OPENAI_API_KEY=st.secrets["OPENAI_API_KEY"]
+prompt = ChatPromptTemplate.from_template(
+    """Answer the following question based only on the provided context:
+
+<context>
+{context}
+</context>
+
+Question: {input}"""
+)
+
+document_chain = create_stuff_documents_chain(llm, prompt)
+retrieval_chain = create_retrieval_chain(retriever, document_chain)
+
 llm=ChatOpenAI(openai_api_key=OPENAI_API_KEY,temperature=0,model_name="gpt-4o-mini")
 
 # Create QA chain
