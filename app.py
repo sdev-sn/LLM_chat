@@ -19,7 +19,8 @@ from langchain.vectorstores.faiss import FAISS
 from langchain.chains.combine_documents import create_stuff_documents_chain
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import SentenceTransformerEmbeddings
+#from langchain.embeddings import SentenceTransformerEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_core.messages import SystemMessage
 from langchain.chains import RetrievalQA, ConversationalRetrievalChain
@@ -63,7 +64,8 @@ def pre_req(file_path):
 
   text_splitter = RecursiveCharacterTextSplitter(chunk_size=5000, chunk_overlap=250)
   texts = text_splitter.create_documents(documents)
-  embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+  #embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
+  embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
   persist_directory = "./chroma_db_m"
   vectorstore = Chroma.from_documents(documents=texts, embedding=embeddings, persist_directory=persist_directory)
   # retriever = vectorstore.as_retriever(k=100)
