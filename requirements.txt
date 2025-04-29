@@ -26,4 +26,5 @@ chromadb
 tiktoken
 openpyxl
 faiss-cpu
+protoc >= 3.19.0
 
