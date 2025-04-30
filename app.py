@@ -66,7 +66,7 @@ def pre_req(file_path):
   texts = text_splitter.create_documents(documents)
   #embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
   embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
-  persist_directory = "./chroma_db_a"
+  persist_directory = "./chroma_db_b"
   vectorstore = Chroma.from_documents(documents=texts, embedding=embeddings, persist_directory=persist_directory)
   # retriever = vectorstore.as_retriever(k=100)
   return vectorstore
