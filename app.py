@@ -18,7 +18,7 @@ from chromadb import Client
 #from langchain.vectorstores.faiss import FAISS
 #from langchain.chains.combine_documents import create_stuff_documents_chain
 
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.text_splitters import RecursiveCharacterTextSplitter
 #from langchain.embeddings import SentenceTransformerEmbeddings
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
