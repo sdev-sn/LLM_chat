@@ -15,7 +15,7 @@ import tiktoken
 import time
 
 from chromadb import Client
-from langchain.vectorstores.faiss import FAISS
+#from langchain.vectorstores.faiss import FAISS
 from langchain.chains.combine_documents import create_stuff_documents_chain
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
