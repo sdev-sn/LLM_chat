@@ -60,8 +60,6 @@ def pre_req(file_path):
       document_text = row['selftext']
       documents.append(document_text)
 
-#  documents = [row[2] for _, row in df_data.iterrows()]
-
   text_splitter = RecursiveCharacterTextSplitter(chunk_size=5000, chunk_overlap=250)
   texts = text_splitter.create_documents(documents)
   #embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
