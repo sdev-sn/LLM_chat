@@ -14,10 +14,6 @@ import openpyxl
 import tiktoken
 import time
 
-from chromadb import Client
-#from langchain.vectorstores.faiss import FAISS
-#from langchain.chains.combine_documents import create_stuff_documents_chain
-
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 #from langchain.embeddings import SentenceTransformerEmbeddings
 from langchain_community.embeddings import HuggingFaceEmbeddings

@@ -36,6 +36,12 @@ def test_langchain_import_paths():
     assert "from langchain.text_splitters import" not in source, \
         "Use langchain_text_splitters, not langchain.text_splitters"
 
+def test_no_unused_chromadb_client_import():
+    with open("app.py") as f:
+        source = f.read()
+    assert "from chromadb import Client" not in source, \
+        "chromadb.Client is unused and triggers a protobuf version crash on import"
+
 def test_langchain_pinned_below_03():
     """ConversationalRetrievalChain was removed in langchain 0.3."""
     with open("requirements.txt") as f:
