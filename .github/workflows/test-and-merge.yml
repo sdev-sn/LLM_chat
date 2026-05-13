@@ -27,7 +27,11 @@ jobs:
         run: pip list | grep -iE "pandas|openpyxl|pytest"
 
       - name: Run tests
-        run: pytest tests/ -v
+        run: |
+          pytest tests/ -v --tb=short 2>&1 | tee /tmp/pytest_out.txt
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          cat /tmp/pytest_out.txt >> $GITHUB_STEP_SUMMARY
+          grep -q "passed" /tmp/pytest_out.txt && exit 0 || exit 1
 
   auto-merge:
     needs: test
