@@ -83,7 +83,8 @@ def test_data_processing_logic():
 
 def test_text_splitter_on_real_data():
     """Verify the text splitter runs without error on actual Excel content."""
-    from langchain_text_splitters import RecursiveCharacterTextSplitter
+    lts = pytest.importorskip("langchain_text_splitters", reason="langchain_text_splitters not installed")
+    RecursiveCharacterTextSplitter = lts.RecursiveCharacterTextSplitter
 
     df = pd.read_excel("reddit_data2.xlsx")
     df["selftext"] = df["selftext"].astype(str)
@@ -95,7 +96,8 @@ def test_text_splitter_on_real_data():
 
 def test_pre_req_data_pipeline():
     """Run the full data pipeline up to vectorstore creation, mocking only the heavy ML parts."""
-    from langchain_text_splitters import RecursiveCharacterTextSplitter
+    lts = pytest.importorskip("langchain_text_splitters", reason="langchain_text_splitters not installed")
+    RecursiveCharacterTextSplitter = lts.RecursiveCharacterTextSplitter
 
     df = pd.read_excel("reddit_data2.xlsx")
     df_data = df[["title", "subreddit", "selftext"]]
@@ -107,7 +109,6 @@ def test_pre_req_data_pipeline():
     splitter = RecursiveCharacterTextSplitter(chunk_size=5000, chunk_overlap=250)
     texts = splitter.create_documents(documents)
 
-    # Verify the output that would be passed to the vectorstore
     assert len(texts) > 0
     assert all(hasattr(t, "page_content") for t in texts), "Chunks must have page_content"
     assert all(isinstance(t.page_content, str) for t in texts)

@@ -21,16 +21,10 @@ jobs:
           python-version: "3.11"
 
       - name: Install test dependencies
-        run: |
-          pip install --upgrade pip
-          pip install \
-            "langchain-text-splitters>=0.2.0,<0.3.0" \
-            pandas \
-            openpyxl \
-            pytest
+        run: pip install --upgrade pip && pip install pandas openpyxl pytest
 
       - name: Show installed versions
-        run: pip list | grep -iE "langchain|pandas|openpyxl"
+        run: pip list | grep -iE "pandas|openpyxl|pytest"
 
       - name: Run tests
         run: pytest tests/ -v
