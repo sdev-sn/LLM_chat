@@ -24,15 +24,13 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install \
-            "langchain>=0.2.0,<0.3.0" \
-            "langchain-community>=0.2.0,<0.3.0" \
             "langchain-text-splitters>=0.2.0,<0.3.0" \
             pandas \
             openpyxl \
             pytest
 
       - name: Show installed versions
-        run: pip list | grep -iE "langchain|pandas|openpyxl|chromadb"
+        run: pip list | grep -iE "langchain|pandas|openpyxl"
 
       - name: Run tests
         run: pytest tests/ -v
