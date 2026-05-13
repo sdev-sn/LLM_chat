@@ -57,10 +57,8 @@ def pre_req(file_path):
   documents = []
   for i, row in df_data.iterrows():
     # Assuming each row is a document
-      document_text = row [2]
+      document_text = row['selftext']
       documents.append(document_text)
-
-#  documents = [row[2] for _, row in df_data.iterrows()]
 
   text_splitter = RecursiveCharacterTextSplitter(chunk_size=5000, chunk_overlap=250)
   texts = text_splitter.create_documents(documents)
