@@ -1,6 +1,4 @@
 #Ref python file - Test_chromadb
-#import streamlit as st
-#st.write('Hello world!')
 
 __import__('pysqlite3')
 import sys
@@ -13,9 +11,29 @@ import pandas as pd
 import openpyxl
 import tiktoken
 import time
+import sentry_sdk
+
+# ── Sentry error monitoring ───────────────────────────────────────────────────
+# DSN is stored in Streamlit Cloud secrets (Settings → Secrets → SENTRY_DSN)
+# No-op if the secret is not configured (e.g. local dev without secrets file)
+_sentry_dsn = st.secrets.get("SENTRY_DSN", None)
+if _sentry_dsn:
+    def _before_send(event, hint):
+        # Strip user chat input from breadcrumbs and request data to prevent
+        # personal data leaking into Sentry
+        if "request" in event:
+            event.pop("request", None)
+        for crumb in event.get("breadcrumbs", {}).get("values", []):
+            crumb.pop("message", None)
+        return event
+
+    sentry_sdk.init(
+        dsn=_sentry_dsn,
+        traces_sample_rate=0.0,   # errors only, no performance tracing
+        before_send=_before_send,
+    )
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-#from langchain.embeddings import SentenceTransformerEmbeddings
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_core.messages import SystemMessage
@@ -28,10 +46,9 @@ from langchain_core.prompts import (ChatPromptTemplate, MessagesPlaceholder,
                                     HumanMessagePromptTemplate)
 
 
-
 dotenv.load_dotenv()
 ##Model
-claude_api_key =st.secrets["CLAUDE_API_KEY"]
+claude_api_key = st.secrets["CLAUDE_API_KEY"]
 llm = ChatAnthropic(model="claude-3-7-sonnet-20250219", temperature=0, anthropic_api_key=claude_api_key)
 
 @st.cache_resource(ttl="2h")
@@ -44,7 +61,6 @@ def pre_req(file_path):
   #get file
   df = pd.read_excel(file_path)
   df_data = df[['title','subreddit', 'selftext']]
-# st.dataframe(df_data.head())
 
   # Convert relevant columns to string type
   for col in ['title', 'subreddit', 'selftext']:
@@ -52,23 +68,20 @@ def pre_req(file_path):
       df_data[col] = df_data[col].astype(str)
   documents = []
   for i, row in df_data.iterrows():
-    # Assuming each row is a document
       document_text = row['selftext']
       documents.append(document_text)
 
   text_splitter = RecursiveCharacterTextSplitter(chunk_size=5000, chunk_overlap=250)
   texts = text_splitter.create_documents(documents)
-  #embeddings = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
   embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
   persist_directory = "./chroma_db_b"
   vectorstore = Chroma.from_documents(documents=texts, embedding=embeddings, persist_directory=persist_directory)
-  # retriever = vectorstore.as_retriever(k=100)
   return vectorstore
 
 file_path = "reddit_data2.xlsx"
 vectorstore = pre_req(file_path)
 
-#Strealit app
+#Streamlit app
 st.title("Chat with Reddit")
 st.caption('Hi there! I am your co-pilot for Reddit insights')
 
@@ -87,11 +100,8 @@ if task == "Chat":
   Asistant:"""
   prompt = PromptTemplate(input_variable =["context" ,"chat_history", "question"], template = template)
 
-#create custom chain
   if llm is not None and retriever is not None:
     chain = ConversationalRetrievalChain.from_llm(memory=memory, llm=llm, retriever=retriever, return_source_documents=True, combine_docs_chain_kwargs={'prompt' : prompt })
-  else:
-    logger.error("LLM or retriever is not initialized.")
 
   task = "Reset"
 
@@ -104,16 +114,14 @@ if txt:
     st.session_state['chat_history'].append("User: " +txt)
     chat_user = st.chat_message("user")
     chat_user.write(txt)
-    chat_assistant = st.chat_message ("assistant")
-    with st.status("Getting the answer...")as status:
+    chat_assistant = st.chat_message("assistant")
+    with st.status("Getting the answer...") as status:
         tms_start = time.time()
         pred = chain({"question": txt, "chat_history": st.session_state['chat_history']}, return_only_outputs=True)
         answer = pred['answer']
         chat_assistant.write(answer)
         st.session_state['chat_history'].append("Assistant: " +answer)
         tms_elapsed = time.time() - tms_start
-      #  status.update(label="Answer generated in %0.2f seconds." \
-      #                % (tms_elapsed), state="complete", expanded=True)
     st.sidebar.markdown(
         "<br />".join(st.session_state['chat_history'])+"<br /><br ?>",
         unsafe_allow_html=True

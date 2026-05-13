@@ -1,0 +1,65 @@
+name: Auto-Fix Sentry Error
+
+on:
+  repository_dispatch:
+    types: [sentry-error]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install anthropic
+
+      - name: Generate fix with Claude
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ERROR_TITLE: ${{ github.event.client_payload.error_title }}
+          ERROR_CULPRIT: ${{ github.event.client_payload.error_culprit }}
+          SENTRY_URL: ${{ github.event.client_payload.sentry_url }}
+        run: python .github/scripts/fix_with_claude.py
+
+      - name: Check if fix was applied
+        id: check
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Open PR with fix
+        if: steps.check.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ERROR_TITLE: ${{ github.event.client_payload.error_title }}
+          SENTRY_URL: ${{ github.event.client_payload.sentry_url }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          BRANCH="autofix/sentry-$(date +%s)"
+          git checkout -b "$BRANCH"
+          git add app.py
+          git commit -m "Auto-fix: $ERROR_TITLE"
+          git push -u origin "$BRANCH"
+          gh pr create \
+            --title "Auto-fix: $ERROR_TITLE" \
+            --body "Automated fix triggered by Sentry.
+
+**Error:** $ERROR_TITLE
+**Sentry:** $SENTRY_URL
+
+CI will run tests before merging." \
+            --base main

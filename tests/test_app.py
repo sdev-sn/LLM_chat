@@ -42,6 +42,21 @@ def test_no_unused_chromadb_client_import():
     assert "from chromadb import Client" not in source, \
         "chromadb.Client is unused and triggers a protobuf version crash on import"
 
+def test_sentry_sdk_in_requirements():
+    with open("requirements.txt") as f:
+        content = f.read()
+    assert "sentry-sdk" in content, "sentry-sdk must be in requirements.txt"
+
+def test_sentry_init_uses_secrets_not_hardcoded():
+    with open("app.py") as f:
+        source = f.read()
+    assert "sentry_sdk.init" in source, "Sentry must be initialised in app.py"
+    assert 'st.secrets' in source, "Sentry DSN must be loaded from st.secrets, not hardcoded"
+    # Ensure no DSN is hardcoded (DSNs look like https://...@...sentry.io/...)
+    import re
+    hardcoded = re.findall(r'https://[a-f0-9]+@[a-z0-9.]+\.sentry\.io/\d+', source)
+    assert not hardcoded, f"Hardcoded Sentry DSN found — move it to st.secrets: {hardcoded}"
+
 def test_langchain_pinned_below_03():
     """ConversationalRetrievalChain was removed in langchain 0.3."""
     with open("requirements.txt") as f:
