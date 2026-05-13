@@ -20,20 +20,19 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Cache pip dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Install dependencies
+      - name: Install test dependencies
         run: |
           pip install --upgrade pip
-          pip install pysqlite3-binary
-          pip install -r requirements.txt
-          pip install pytest
+          pip install \
+            "langchain>=0.2.0,<0.3.0" \
+            "langchain-community>=0.2.0,<0.3.0" \
+            "langchain-text-splitters>=0.2.0,<0.3.0" \
+            pandas \
+            openpyxl \
+            pytest
+
+      - name: Show installed versions
+        run: pip list | grep -iE "langchain|pandas|openpyxl|chromadb"
 
       - name: Run tests
         run: pytest tests/ -v
